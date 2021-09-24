@@ -55,9 +55,7 @@ Media downloads will be in the following directory structure:
 │   └── {filename}
 ├── {submission_uid}
 │   └── {filename}
-├── {submission_uid}
-├── {submission_uid}
-│   ├── {filename}
-│   └── {filename}
 └── {submission_uid}
+    ├── {filename}
+    └── {filename}
 ```

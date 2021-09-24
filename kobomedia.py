@@ -26,6 +26,9 @@ def download_all_media(data_url, stats, *args, **kwargs):
         if not '_attachments' in sub:
             continue
 
+        if not sub['_attachments']:
+            continue
+
         sub_dir = os.path.join(kwargs['asset_uid'], sub['_uuid'])
         if not os.path.isdir(sub_dir):
             os.makedirs(sub_dir)
