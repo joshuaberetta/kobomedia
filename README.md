@@ -25,7 +25,7 @@ kobomedia --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summa
   --token "your_secret_token"
 ```
 
-### optional fields
+### Optional fields
 
 - `limit`: Limit number of submissions per query, paginate until complete
 - `query`: Set a custom query in the Mongo query syntax
@@ -39,4 +39,25 @@ kobomedia --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summa
   --query '{"_submission_time": {"$gt": "2021-08-04"}}' \
   --chunk-size 2048 \
   --verbosity 2
+```
+
+## Output
+
+Media downloads will be in the following directory structure:
+```
+{asset_uid}
+├── {submission_uid}
+│   ├── {filename}
+│   └── {filename}
+├── {submission_uid}
+│   └── {filename}
+├── {submission_uid}
+│   └── {filename}
+├── {submission_uid}
+│   └── {filename}
+├── {submission_uid}
+├── {submission_uid}
+│   ├── {filename}
+│   └── {filename}
+└── {submission_uid}
 ```
