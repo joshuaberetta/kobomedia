@@ -14,15 +14,15 @@ sudo ln -s $(pwd)/kobomedia.py /usr/local/bin/kobomedia
 ```bash
 # download media
 python3 kobomedia.py --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summary" \
-  --token your_secret_token
+  --token "your_secret_token"
 
 # or
 ./kobomedia.py --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summary" \
-  --token your_secret_token
+  --token "your_secret_token"
   
 # or
 kobomedia --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summary" \
-  --token your_secret_token
+  --token "your_secret_token"
 ```
 
 ### optional fields
@@ -34,7 +34,7 @@ kobomedia --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summa
 
 ```bash
 ./kobomedia.py --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summary" \
-  --token your_secret_token \
+  --token "your_secret_token" \
   --limit 10 \
   --query '{"_submission_time": {"$gt": "2021-08-04"}}' \
   --chunk-size 2048 \
