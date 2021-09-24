@@ -19,6 +19,10 @@ python3 kobomedia.py --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd
 # or
 ./kobomedia.py --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summary" \
   --token your_secret_token
+  
+# or
+kobomedia --url "https://kf.kobotoolbox.org/#/forms/aTQHSsjPsN5zWEofd9dKEb/summary" \
+  --token your_secret_token
 ```
 
 ### optional fields
