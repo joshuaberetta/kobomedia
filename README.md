@@ -59,3 +59,4 @@ Media downloads will be in the following directory structure:
     ├── {filename}
     └── {filename}
 ```
+If a file has previously been downloaded, it will be skipped (not downloaded again) on subsequent runs. Therefore the script can be run periodically to keep a local sync of submitted media on the server.
