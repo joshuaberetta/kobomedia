@@ -3,8 +3,13 @@
 import argparse
 import json
 import os
+import pathlib
 import re
 import requests
+import time
+
+KOBO_CONF = 'kobo.json'
+REWRITE_DOWNLOAD_URL = True
 
 
 def download_all_media(data_url, stats, *args, **kwargs):
@@ -34,6 +39,10 @@ def download_all_media(data_url, stats, *args, **kwargs):
 
         for attachment in attachments:
             download_url = attachment['download_url']
+            if REWRITE_DOWNLOAD_URL:
+                download_url = rewrite_download_url(
+                    download_url, kwargs['kc_url']
+                )
             filename = get_filename(attachment['filename'])
             file_path = os.path.join(sub_dir, filename)
             if os.path.exists(file_path):
@@ -67,11 +76,20 @@ def download_media_file(url, path, stats, headers, chunk_size, *args, **kwargs):
         print(f'Success: {path}')
     stats['successful'] += 1
 
+    time.sleep(kwargs['throttle'])
+
     return stats
 
 
 def get_clean_stats():
     return {'successful': 0, 'failed': 0, 'skipped': 0}
+
+
+def get_config():
+    conf_path = os.path.join(pathlib.Path(__file__).resolve().parent, KOBO_CONF)
+    with open(conf_path, 'r') as f:
+        settings = json.loads(f.read())
+    return settings
 
 
 def get_data_url(asset_uid, kf_url):
@@ -82,12 +100,6 @@ def get_filename(path):
     return path.split('/')[-1]
 
 
-def get_kf_url_and_asset_uid(url):
-    return re.match(
-        r'^(https?://[a-z\.]*).*(a[a-zA-Z0-9]{21}).*$', url
-    ).groups()
-
-
 def get_params(limit=100, query='', *args, **kwargs):
     params = {'format': 'json', 'limit': limit}
     if query:
@@ -95,17 +107,27 @@ def get_params(limit=100, query='', *args, **kwargs):
     return params
 
 
-def main(url, token, verbosity=3, *args, **kwargs):
-    kf_url, asset_uid = get_kf_url_and_asset_uid(url)
+def rewrite_download_url(url, kc_url):
+    media_file = re.search(r'(media_file=.*)', url).groups()[0]
+    return f'{kc_url}/media/original?{media_file}'
+
+
+def main(asset_uid, verbosity=3, *args, **kwargs):
+    settings = get_config()
     options = {
         'asset_uid': asset_uid,
         'params': get_params(*args, **kwargs),
-        'headers': {'Authorization': f'Token {token}'},
+        'headers': {'Authorization': f'Token {settings["token"]}'},
         'verbosity': verbosity,
     }
-    data_url = get_data_url(asset_uid, kf_url)
+    data_url = get_data_url(asset_uid, settings['kf_url'])
     stats = download_all_media(
-        data_url, stats=get_clean_stats(), *args, **kwargs, **options
+        data_url,
+        stats=get_clean_stats(),
+        *args,
+        **kwargs,
+        **options,
+        **settings,
     )
     if verbosity > 1:
         print(json.dumps(stats, indent=2))
@@ -116,17 +138,10 @@ if __name__ == '__main__':
         description='A CLI tool to download kobo media files'
     )
     parser.add_argument(
-        '--url',
-        '-u',
+        '--asset-uid',
+        '-a',
         type=str,
-        help='Kobo URL',
-        required=True,
-    )
-    parser.add_argument(
-        '--token',
-        '-t',
-        type=str,
-        help='Authentication token',
+        help='Asset UID',
         required=True,
     )
     parser.add_argument(
@@ -151,6 +166,13 @@ if __name__ == '__main__':
         help='Stream chunk size',
     )
     parser.add_argument(
+        '--throttle',
+        '-t',
+        type=int,
+        default=1,
+        help='Throttle time between each download',
+    )
+    parser.add_argument(
         '--verbosity',
         '-v',
         type=int,
@@ -160,10 +182,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(
-        url=args.url,
-        token=args.token,
+        asset_uid=args.asset_uid,
         limit=args.limit,
         query=args.query,
         chunk_size=args.chunk_size,
+        throttle=args.throttle,
         verbosity=args.verbosity,
     )
