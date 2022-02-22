@@ -29,6 +29,8 @@ def download_all_media(data_url, stats, *args, **kwargs):
 
     for sub in results:
         attachments = sub.get('_attachments', [])
+        media_filenames = [sub.get(name) for name in kwargs['question_names'].split(',')]
+        media_filenames = [get_valid_filename(name) for name in media_filenames if name is not None]
 
         if not attachments:
             continue
@@ -44,6 +46,10 @@ def download_all_media(data_url, stats, *args, **kwargs):
                     download_url, kwargs['kc_url']
                 )
             filename = get_filename(attachment['filename'])
+
+            if kwargs['question_names'] and filename not in media_filenames:
+                continue
+
             file_path = os.path.join(sub_dir, filename)
             if os.path.exists(file_path):
                 if kwargs['verbosity'] == 3:
@@ -107,6 +113,12 @@ def get_params(limit=100, query='', *args, **kwargs):
     return params
 
 
+def get_valid_filename(name):
+    s = str(name).strip().replace(' ', '_')
+    s = re.sub(r'(?u)[^-\w.]', '', s)
+    return s
+
+
 def rewrite_download_url(url, kc_url):
     media_file = re.search(r'(media_file=.*)', url).groups()[0]
     return f'{kc_url}/media/original?{media_file}'
@@ -159,6 +171,14 @@ if __name__ == '__main__':
         help='Custom data query',
     )
     parser.add_argument(
+        '--question-names',
+        '-Q',
+        type=str,
+        default='',
+        action='store',
+        help='Specific question name for media download',
+    )
+    parser.add_argument(
         '--chunk-size',
         '-c',
         type=int,
@@ -185,6 +205,7 @@ if __name__ == '__main__':
         asset_uid=args.asset_uid,
         limit=args.limit,
         query=args.query,
+        question_names=args.question_names,
         chunk_size=args.chunk_size,
         throttle=args.throttle,
         verbosity=args.verbosity,

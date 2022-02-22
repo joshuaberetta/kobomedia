@@ -27,7 +27,7 @@ python3 kobomedia.py --asset-uid agBMEh8GWxTrCSWQuWyE5d
 
 # or
 ./kobomedia.py --asset-uid agBMEh8GWxTrCSWQuWyE5d
-  
+
 # or
 kobomedia --asset-uid agBMEh8GWxTrCSWQuWyE5d
 ```
@@ -36,6 +36,8 @@ kobomedia --asset-uid agBMEh8GWxTrCSWQuWyE5d
 
 - `limit`: Limit number of submissions per query, paginate until complete
 - `query`: Set a custom query in the Mongo query syntax
+- `question-names`: Specify question names to download media for, comma
+  separated
 - `chunk-size`: Set chunk size for saving data to files
 - `throttle`: Control time between each download to reduce server strain
 - `verbosity`: Control verbosity of stdout
@@ -44,6 +46,7 @@ kobomedia --asset-uid agBMEh8GWxTrCSWQuWyE5d
 ./kobomedia.py --asset-uid agBMEh8GWxTrCSWQuWyE5d
   --limit 10 \
   --query '{"_submission_time": {"$gt": "2021-08-04"}}' \
+  --question-names group1/q1,group2/q2
   --chunk-size 2048 \
   --throttle 2
   --verbosity 2
