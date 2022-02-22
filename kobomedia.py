@@ -29,8 +29,14 @@ def download_all_media(data_url, stats, *args, **kwargs):
 
     for sub in results:
         attachments = sub.get('_attachments', [])
-        media_filenames = [sub.get(name) for name in kwargs['question_names'].split(',')]
-        media_filenames = [get_valid_filename(name) for name in media_filenames if name is not None]
+        media_filenames = [
+            sub.get(name) for name in kwargs['question_names'].split(',')
+        ]
+        media_filenames = [
+            get_valid_filename(name)
+            for name in media_filenames
+            if name is not None
+        ]
 
         if not attachments:
             continue
