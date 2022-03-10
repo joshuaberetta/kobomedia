@@ -43,13 +43,13 @@ kobomedia --asset-uid agBMEh8GWxTrCSWQuWyE5d
 - `verbosity`: Control verbosity of stdout
 
 ```bash
-./kobomedia.py --asset-uid agBMEh8GWxTrCSWQuWyE5d
+./kobomedia.py --asset-uid agBMEh8GWxTrCSWQuWyE5d \
   --limit 10 \
   --query '{"_submission_time": {"$gt": "2021-08-04"}}' \
-  --question-names group1/q1,group2/q2
+  --question-names group1/q1,group2/q2 \
   --chunk-size 2048 \
-  --throttle 2
-  --verbosity 2
+  --throttle 2 \
+  --verbosity 2 \
 ```
 
 ## Output
