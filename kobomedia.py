@@ -46,7 +46,7 @@ def download_all_media(data_url, stats, *args, **kwargs):
             os.makedirs(sub_dir)
 
         for attachment in attachments:
-            download_url = attachment['download_url']
+            download_url = attachment['filename']
             if REWRITE_DOWNLOAD_URL:
                 download_url = rewrite_download_url(
                     download_url, kwargs['kc_url']
@@ -125,9 +125,8 @@ def get_valid_filename(name):
     return s
 
 
-def rewrite_download_url(url, kc_url):
-    media_file = re.search(r'(media_file=.*)', url).groups()[0]
-    return f'{kc_url}/media/original?{media_file}'
+def rewrite_download_url(filename, kc_url):
+    return f'{kc_url}/media/original?media_file={filename}'
 
 
 def main(asset_uid, verbosity=3, *args, **kwargs):
