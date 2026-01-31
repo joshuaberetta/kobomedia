@@ -9,7 +9,7 @@ import requests
 import time
 
 KOBO_CONF = 'kobo.json'
-REWRITE_DOWNLOAD_URL = True
+REWRITE_DOWNLOAD_URL = False
 
 
 def download_all_media(data_url, stats, *args, **kwargs):
@@ -46,7 +46,7 @@ def download_all_media(data_url, stats, *args, **kwargs):
             os.makedirs(sub_dir)
 
         for attachment in attachments:
-            download_url = attachment['filename']
+            download_url = attachment['download_url']
             if REWRITE_DOWNLOAD_URL:
                 download_url = rewrite_download_url(
                     download_url, kwargs['kc_url']
